@@ -22,36 +22,48 @@ function readLine() {
     return inputString[currentLine++];
 }
 
+
+function getDiagonal(arr, firstElementPosition, kernel) {
+    let currentPosition = firstElementPosition;
+    const diagonalElements = [];
+    while (currentPosition[1] >= 0) {
+        diagonalElements.push(arr[currentPosition[0]][currentPosition[1]]);
+        currentPosition = [currentPosition[0] + kernel[0], currentPosition[1] + kernel[1]]
+    }
+    return diagonalElements;
+}
+
+function getSum(arr) {
+    return arr.reduce((acc, val) => acc + val, 0);
+}
+
 /*
- * Complete the 'arrayManipulation' function below.
+ * Complete the 'diagonalDifference' function below.
  *
- * The function is expected to return a LONG_INTEGER.
- * The function accepts following parameters:
- *  1. INTEGER n
- *  2. 2D_INTEGER_ARRAY queries
+ * The function is expected to return an INTEGER.
+ * The function accepts 2D_INTEGER_ARRAY arr as parameter.
  */
 
-function arrayManipulation(n, queries) {
+function diagonalDifference(arr) {
     // Write your code here
-    return 1;
+    const squareSize = arr.length - 1;
+    const topDiagonal = getDiagonal(arr, [0, squareSize], [1, -1]);
+    const bottomDiagonal = getDiagonal(arr, [squareSize, squareSize], [-1, -1]);
+    return Math.abs(getSum(topDiagonal) - getSum(bottomDiagonal));
 }
 
 function main() {
     const ws = fs.createWriteStream(process.env.OUTPUT_PATH);
 
-    const firstMultipleInput = readLine().replace(/\s+$/g, '').split(' ');
+    const n = parseInt(readLine().trim(), 10);
 
-    const n = parseInt(firstMultipleInput[0], 10);
+    let arr = Array(n);
 
-    const m = parseInt(firstMultipleInput[1], 10);
-
-    let queries = Array(m);
-
-    for (let i = 0; i < m; i++) {
-        queries[i] = readLine().replace(/\s+$/g, '').split(' ').map(queriesTemp => parseInt(queriesTemp, 10));
+    for (let i = 0; i < n; i++) {
+        arr[i] = readLine().replace(/\s+$/g, '').split(' ').map(arrTemp => parseInt(arrTemp, 10));
     }
 
-    const result = arrayManipulation(n, queries);
+    const result = diagonalDifference(arr);
 
     ws.write(result + '\n');
 
